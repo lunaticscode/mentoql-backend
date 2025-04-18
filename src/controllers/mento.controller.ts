@@ -4,7 +4,7 @@ import {
 } from "../consts/ratio";
 import { AppController } from "../types";
 import { getFilteredMentoSeedText } from "../utils/filtering";
-import { getValidQuestionByValidRatio } from "../utils/mentoSeed";
+import { summarizeQuestionByValidRatio } from "../utils/mentoSeed";
 import { getMentoSeedQuestionRatio } from "../utils/weightRatio";
 
 const getMentoSeed: AppController = () => {};
@@ -38,7 +38,7 @@ const insertMetnoSeed: AppController = async (req, res) => {
     MENTO_SEED_QUESTION_MIN_RATIO > questionRatio
   ) {
     const { q: validQuestion, a: _validAnswer } =
-      await getValidQuestionByValidRatio(filteredQuestion, filteredAnswer, 3);
+      await summarizeQuestionByValidRatio(filteredQuestion, filteredAnswer, 3);
     resultQuestion = validQuestion;
   }
 

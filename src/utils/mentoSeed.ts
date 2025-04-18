@@ -7,7 +7,7 @@ import {
 import { llmApi } from "./api";
 import { getFilteredMentoSeedText } from "./filtering";
 
-const getValidQuestionByValidRatio = async (
+const summarizeQuestionByValidRatio = async (
   question: string,
   answer: string,
   recurCount: number = 1
@@ -50,7 +50,7 @@ const getValidQuestionByValidRatio = async (
           questionMaxLength < filteredContent.length) &&
         recurCount
       ) {
-        return await getValidQuestionByValidRatio(
+        return await summarizeQuestionByValidRatio(
           filteredContent,
           answer,
           recurCount - 1
@@ -79,4 +79,4 @@ const getValidQuestionByValidRatio = async (
   }
 };
 
-export { getValidQuestionByValidRatio };
+export { summarizeQuestionByValidRatio };
