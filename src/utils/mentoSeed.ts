@@ -1,5 +1,5 @@
 import { HttpStatusCode } from "axios";
-import { OEPNROUTER_LLM_MODEL } from "../consts/api";
+import { OEPNROUTER_LLM_MODEL } from "../consts/llm";
 import {
   MENTO_SEED_QUESTION_MAX_RATIO,
   MENTO_SEED_QUESTION_MIN_RATIO,
