@@ -1,9 +1,13 @@
-## 🔥**Mentor Answer Embedding Flow (Node.js + TypeScript + Express + Milvus)**
+## 🔥**MentorQL Backend**
 
-이 문서는 mentoql-backend 프로젝트의 코어 로직인,
-멘토의 답변 데이터를 Milvus 벡터 DB에 저장할 때 질문/답변 텍스트의 길이 불균형으로 인한 벡터 왜곡을 방지하기 위한 전략을 설명함.
+- 이 문서는 mentoql-backend 프로젝트의 코어 로직인,
+  멘토의 답변 데이터를 `Milvus 벡터 DB`에 저장할 때 질문/답변 텍스트의 길이 불균형으로 인한 `벡터 왜곡`을 방지하기 위한 전략을 설명함.
 
-그리고 해당 전략을 코드레벨에서 어떻게 적용할 것인지 간략하게 기술함.
+- 그리고 해당 전략을 코드레벨에서 어떻게 적용할 것인지 간략하게 기술함.
+
+- **Text Embedding**은 `@xenova/transformers`를 사용.
+
+- RAG에 사용될 LLM은 `openrouter.ai` 제공되는 `Llama 4 Maverick`을 사용.
 
 ---
 
@@ -79,7 +83,7 @@ const combinedEmbedding = questionEmbedding.map(
 
 ## 📁 추천 함수 구조 (모듈화 기준)
 
-- `summarizeQuestion(text: string): Promise<string>`
+- `summarizeQuestion(question: string, answer: string, recurCount: number): Promise<{q: string, a: string}>`
 - `expandAnswer(text: string): Promise<string>`
 - `generateBalancedEmbedding(question: string, answer: string): Promise<number[]>`
 - `saveToMilvus(embedding: number[], question: string, answer: string, mentorId: string): Promise<void>`
