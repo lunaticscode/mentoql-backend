@@ -63,7 +63,7 @@ const combinedEmbedding = questionEmbedding.map(
 
 - `questionEmbedding` / `answerEmbedding` 은 같은 모델로 생성되어야 하며, `dim`이 같아야 함.
 - `@xenova/transformers` 사용(dim: 384)
-- `metric_type`을 어떻게 해야할지 고민.
+- `metric_type`은 `COSINE`(코사인 유사도 방식)
 
 ---
 
