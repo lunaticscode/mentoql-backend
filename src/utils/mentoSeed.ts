@@ -56,26 +56,17 @@ const summarizeQuestionByValidRatio = async (
           recurCount - 1
         );
       }
-      return {
-        q: content as string,
-        a: answer,
-      };
+      return content;
     }
     // recur..?
     // or 기존 question, answer;
     // openrouter 를 거쳐서 llm에 접근하는 구조이기 때문에,
     // openrouter 서버 상황을 알 수 없기 때문에 무작적 recur하는 것도 손실.
     // 보수적으로 기존 question, answer을 그대로 return 하는게 좋을 것 같음.
-    return {
-      q: question,
-      a: answer,
-    };
+    return question;
   } catch (err) {
     console.error(err);
-    return {
-      q: question,
-      a: answer,
-    };
+    return question;
   }
 };
 
