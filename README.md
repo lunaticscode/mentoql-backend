@@ -71,13 +71,16 @@ const combinedEmbedding = questionEmbedding.map(
 
 컬렉션 이름: `mentor_answers`
 
-| 필드명      | 타입        | 설명               |
-| ----------- | ----------- | ------------------ |
-| `id`        | Int64       | 기본 키            |
-| `question`  | VarChar     | 요약된 질문 텍스트 |
-| `answer`    | VarChar     | 확장된 답변 텍스트 |
-| `embedding` | FloatVector | 384차원 벡터       |
-| `mentor_id` | VarChar     | 멘토 식별자        |
+| 필드명      | 타입        | 설명               | 비고                |
+| ----------- | ----------- | ------------------ | ------------------- |
+| `id`        | Int64       | 기본 키            |                     |
+| `question`  | VarChar     | 요약된 질문 텍스트 | (MongoDB 이관 예정) |
+| `answer`    | VarChar     | 확장된 답변 텍스트 | (MongoDB 이관 예정) |
+| `embedding` | FloatVector | 384차원 벡터       |                     |
+| `mentor_id` | VarChar     | 멘토 식별자        |                     |
+
+- `metric_type` 은 `COSINE` (⇒ 코사인 유사도)
+- 추후 원본 질문 `question`, 답변 `answer` 텍스트는 MongoDB에 별도 저장 예정.
 
 ---
 
