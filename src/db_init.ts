@@ -1,10 +1,11 @@
-import { FieldType, MilvusClient } from "@zilliz/milvus2-sdk-node";
+import { FieldType, MetricType, MilvusClient } from "@zilliz/milvus2-sdk-node";
 import { metnoSeedSchema } from "./schemas";
 import { METNO_SEED_COLLECTION } from "./consts/collection";
 
-const activeCollections: [string, FieldType[]][] = [
-  [METNO_SEED_COLLECTION, metnoSeedSchema],
-];
+const activeCollections: [
+  { name: string; metric_type: MetricType },
+  FieldType[]
+][] = [[METNO_SEED_COLLECTION, metnoSeedSchema]];
 
 const milvusClient = new MilvusClient({
   address: "http://localhost:19530",
@@ -15,15 +16,16 @@ milvusClient
   .createDatabase({ db_name: "humanwater_test" })
   .then(async (res) => {
     console.log("Milvus running");
-    for (const [collectionName, schema] of activeCollections) {
+    for (const [collection, schema] of activeCollections) {
       try {
         await milvusClient.createCollection({
-          collection_name: collectionName,
+          collection_name: collection.name,
           fields: schema,
+          metric_type: collection.metric_type,
         });
       } catch (err) {
         console.error(
-          `(!) Occured error during create ${collectionName} collection\n`,
+          `(!) Occured error during create ${collection.name} collection\n`,
           err
         );
       }
