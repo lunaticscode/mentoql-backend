@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../consts/app";
+import { UserProfile } from "../types";
 
 const getSignedToken = (payload = {}) => {
   try {
@@ -14,7 +15,7 @@ const getDecodedToken = (signedToken = "") => {
   if (!signedToken || !signedToken.trim()) return null;
   try {
     const decoded = jwt.decode(signedToken);
-    return decoded;
+    return decoded as UserProfile;
   } catch (err) {
     console.error({ "getDecodedToken - err": err });
     return null;
