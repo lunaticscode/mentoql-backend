@@ -1,5 +1,5 @@
 import express from "express";
-
+import cookieParser from "cookie-parser";
 import db from "./db_init";
 import { AppController } from "./types";
 import { APP_PORT } from "./consts/app";
@@ -20,7 +20,9 @@ const healthCheckController: AppController = async (req, res) => {
 const app = express();
 
 app.get("/health-check", healthCheckController);
+app.use(cookieParser());
 app.use(express.json());
+
 app.use("/api", apiRoute);
 
 app.listen(APP_PORT, () => {

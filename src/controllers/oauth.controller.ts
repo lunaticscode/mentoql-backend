@@ -8,7 +8,7 @@ import { AppController } from "../types";
 import axios from "axios";
 import { getSignedToken } from "../utils/token";
 
-const googleOauthSignin: AppController = (req, res) => {
+const googleOauthSignin: AppController = (_req, res) => {
   const baseEntryUrl = "https://accounts.google.com/o/oauth2/v2/auth";
   if (
     [GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI].some(
