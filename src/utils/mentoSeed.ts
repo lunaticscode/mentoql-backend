@@ -26,7 +26,8 @@ const summarizeQuestionByValidRatio = async (
       (question.length + answer.length) * MENTO_SEED_QUESTION_MAX_RATIO
     ),
   ];
-
+  console.log({ question, answer, recurCount });
+  console.log({ questionTargetLength });
   try {
     const llmReq = await llmApi.post("/chat/completions", {
       model: OEPNROUTER_LLM_MODEL,
@@ -42,9 +43,12 @@ const summarizeQuestionByValidRatio = async (
         },
       ],
     });
+    console.log({ llmReqDataChoices: llmReq.data });
     if (llmReq.status === HttpStatusCode.Ok) {
       const { content } = llmReq.data.choices[0].message;
+
       const filteredContent = getFilteredMentoSeedText(content);
+
       if (
         (questionMinLength > filteredContent.length ||
           questionMaxLength < filteredContent.length) &&

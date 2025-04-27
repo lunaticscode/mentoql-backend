@@ -25,7 +25,7 @@ const mentoSeedSchema: FieldType[] = [
   {
     name: "mento_seed_answer",
     data_type: DataType.VarChar,
-    max_length: 1000,
+    max_length: 2000,
   },
 ];
 export default mentoSeedSchema;

@@ -1,21 +1,8 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import db from "./db_init";
-import { AppController } from "./types";
 import { APP_PORT } from "./consts/app";
 import apiRoute from "./routes";
-
-const healthCheckController: AppController = async (req, res) => {
-  try {
-    const dbInstance = await db.describeDatabase({
-      db_name: "humanwater_test",
-    });
-    return res.json({ data: dbInstance });
-  } catch (err) {
-    console.error({ err });
-    return res.json({ isError: true });
-  }
-};
+import healthCheckController from "./controllers/healtcheck.controller";
 
 const app = express();
 
