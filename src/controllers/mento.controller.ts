@@ -7,22 +7,7 @@ import milvusClient from "../db_init";
 import { AppController } from "../types";
 import { getFilteredMentoSeedText } from "../utils/filtering";
 import { summarizeQuestionByValidRatio } from "../utils/mentoSeed";
-import { getRandomId } from "../utils/randomId";
 import { getMentoSeedQuestionRatio } from "../utils/weightRatio";
-
-const _sleep = async (delay: number = 3000): Promise<void> =>
-  await new Promise((resolve) => setTimeout(() => resolve(), delay));
-
-const getMentoQueryRoom: AppController = async (req, res) => {
-  const { roomId } = req.params;
-  await _sleep(3000);
-  return res.json({ isError: false, roomId });
-};
-
-const createMentoQueryRoom: AppController = async (req, res) => {
-  const randomId = getRandomId();
-  return {};
-};
 
 const getMentoSeed: AppController = async (req, res) => {
   const { question = "" } = req.body;
@@ -156,9 +141,4 @@ const insertMetnoSeed: AppController = async (req, res) => {
     .json({ isError: false, insertCnt: insertResult.insert_cnt });
 };
 
-export {
-  getMentoSeed,
-  insertMetnoSeed,
-  getMentoQueryRoom,
-  createMentoQueryRoom,
-};
+export { getMentoSeed, insertMetnoSeed };
