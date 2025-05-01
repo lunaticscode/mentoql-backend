@@ -1,5 +1,5 @@
-import Question, { QuestionInput } from "../schemas/question.schema";
-const createQuestion = async (data: QuestionInput) => {
+import Question, { QuestionObject } from "../schemas/question.schema";
+const createQuestion = async (data: QuestionObject) => {
   try {
     const createResult = await Question.create(data);
     if (!createResult || !createResult._id) {

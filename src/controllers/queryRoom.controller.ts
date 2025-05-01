@@ -19,7 +19,12 @@ const getQueryRoomController: AppController = async (req, res) => {
 };
 
 const createQueryRoomController: AppController = async (req, res) => {
-  const queryRoomInput = req.body;
+  const tmpQueryRoomInput = req.body;
+  const queryRoomInput = {
+    ...tmpQueryRoomInput,
+    startDate: new Date(tmpQueryRoomInput.startDate),
+    endDate: new Date(tmpQueryRoomInput.endDate),
+  };
   const parsedInput = queryRoomInputSchema.safeParse(queryRoomInput);
   if (!parsedInput.success) {
     console.error(parsedInput.error.format());

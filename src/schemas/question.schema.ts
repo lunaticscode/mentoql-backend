@@ -1,13 +1,18 @@
+import { string, z } from "zod";
 import { model, Schema, Document } from "mongoose";
 const { String } = Schema.Types;
 
-export interface QuestionInput {
-  queryRoomId: string;
+export const questionInputSchema = z.object({
+  queryRoomId: z.string(),
+  content: z.string(),
+});
+
+export type QuestionInput = z.infer<typeof questionInputSchema>;
+
+export interface QuestionObject extends QuestionInput {
   owner: string;
-  content: string;
-  createdAt: Date;
 }
-export interface QuestionSchema extends Document, QuestionInput {}
+export interface QuestionSchema extends Document, QuestionObject {}
 
 const questionSchema = new Schema<QuestionSchema>(
   {

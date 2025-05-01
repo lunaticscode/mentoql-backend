@@ -1,7 +1,4 @@
-import QueryRoomModel, {
-  QueryRoomObject,
-  QueryRoomInput,
-} from "../schemas/queryRoom.schema";
+import QueryRoomModel, { QueryRoomObject } from "../schemas/queryRoom.schema";
 const createQueryRoom = async (data: QueryRoomObject) => {
   try {
     const createResult = await QueryRoomModel.create(data);
@@ -16,7 +13,7 @@ const createQueryRoom = async (data: QueryRoomObject) => {
 
 const getQueryRoom = async (roomId: string) => {
   try {
-    const rooms = await QueryRoomModel.find({ roomId })
+    const rooms = await QueryRoomModel.findOne({ roomId })
       .populate("questions")
       .exec();
     return rooms;

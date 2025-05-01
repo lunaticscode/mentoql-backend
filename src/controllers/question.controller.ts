@@ -13,7 +13,6 @@ const createQuestionController: AppController = async (req, res) => {
       queryRoomId,
       content,
       owner: `test-mentee-${new Date().getTime()}`,
-      createdAt: new Date(),
     });
     if (createdQuestionId) {
       return res.status(201).json({ isError: false });
