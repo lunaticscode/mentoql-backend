@@ -1,9 +1,7 @@
 import { AppController } from "../types";
 import { getRandomId } from "../utils/randomId";
 import { createQueryRoom, getQueryRoom } from "../services/queryRoom.service";
-
-const _sleep = async (delay: number = 3000): Promise<void> =>
-  await new Promise((resolve) => setTimeout(() => resolve(), delay));
+import { queryRoomInputSchema } from "../schemas/queryRoom.schema";
 
 const getQueryRoomListController: AppController = async (req, res) => {
   return res.json({ isError: false });
@@ -21,18 +19,17 @@ const getQueryRoomController: AppController = async (req, res) => {
 };
 
 const createQueryRoomController: AppController = async (req, res) => {
-  const { title = "", description = "" } = req.body;
-
-  if (!title || !description) {
+  const queryRoomInput = req.body;
+  const parsedInput = queryRoomInputSchema.safeParse(queryRoomInput);
+  if (!parsedInput.success) {
+    console.error(parsedInput.error.format());
     return res.status(400).json({ isError: true });
   }
-  const roomId = getRandomId();
   try {
     const createdRoomId = await createQueryRoom({
-      title,
-      description,
-      roomId,
-      owner: `test-owner-${new Date().getTime()}`,
+      ...parsedInput.data,
+      roomId: getRandomId(),
+      owner: `test-mento-owner-${new Date().getTime()}`,
     });
     if (createdRoomId) {
       return res.status(201).json({ isError: false, roomId: createdRoomId });

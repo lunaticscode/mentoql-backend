@@ -1,20 +1,30 @@
 import { Schema, model, Document, Types } from "mongoose";
-const { String, ObjectId } = Schema.Types;
+import { z } from "zod";
+const { String, Date } = Schema.Types;
 
-export interface QueryRoomInput {
+export const queryRoomInputSchema = z.object({
+  title: z.string().min(5),
+  description: z.string().min(10),
+  startDate: z.date(),
+  endDate: z.date(),
+});
+
+export type QueryRoomInput = z.infer<typeof queryRoomInputSchema>;
+
+export interface QueryRoomObject extends QueryRoomInput {
   roomId: string;
-  title: string;
-  description?: string;
   owner: string;
 }
-// ma4w6092b6acss // ma4w6ew6rv8f2j
-export interface QueryRoomSchema extends Document, QueryRoomInput {}
+
+export interface QueryRoomSchema extends Document, QueryRoomObject {}
 
 const queryRoomSchema = new Schema<QueryRoomSchema>(
   {
     roomId: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
     owner: { type: String, required: true, ref: "User" },
   },
   {
@@ -34,5 +44,5 @@ queryRoomSchema.virtual("questions", {
 queryRoomSchema.set("toObject", { virtuals: true });
 queryRoomSchema.set("toJSON", { virtuals: true });
 
-const QueryRoom = model<QueryRoomSchema>("QueryRoom", queryRoomSchema);
-export default QueryRoom;
+const QueryRoomModel = model<QueryRoomSchema>("QueryRoom", queryRoomSchema);
+export default QueryRoomModel;
