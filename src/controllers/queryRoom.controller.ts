@@ -1,10 +1,25 @@
 import { AppController } from "../types";
 import { getRandomId } from "../utils/randomId";
-import { createQueryRoom, getQueryRoom } from "../services/queryRoom.service";
+import {
+  createQueryRoom,
+  getQueryRoom,
+  getQueryRoomList,
+} from "../services/queryRoom.service";
 import { queryRoomInputSchema } from "../schemas/queryRoom.schema";
 
 const getQueryRoomListController: AppController = async (req, res) => {
-  return res.json({ isError: false });
+  const { page = 1, size = 10 } = req.query;
+  if (!page || !size) {
+    return res.status(400).json({ isError: true });
+  }
+  const [parsedPage, parserdSize] = [Number(page), Number(size)];
+  try {
+    const rooms = await getQueryRoomList(parsedPage, parserdSize);
+    return res.json({ isError: false, rooms });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ isError: true });
+  }
 };
 
 const getQueryRoomController: AppController = async (req, res) => {

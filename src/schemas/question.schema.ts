@@ -1,4 +1,4 @@
-import { string, z } from "zod";
+import { z } from "zod";
 import { model, Schema, Document } from "mongoose";
 const { String } = Schema.Types;
 
@@ -8,7 +8,6 @@ export const questionInputSchema = z.object({
 });
 
 export type QuestionInput = z.infer<typeof questionInputSchema>;
-
 export interface QuestionObject extends QuestionInput {
   owner: string;
 }

@@ -11,15 +11,27 @@ const createQueryRoom = async (data: QueryRoomObject) => {
   }
 };
 
-const getQueryRoom = async (roomId: string) => {
+const getQueryRoomList = async (page: number, size: number) => {
   try {
-    const rooms = await QueryRoomModel.findOne({ roomId })
-      .populate("questions")
-      .exec();
+    const rooms = await QueryRoomModel.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * size)
+      .limit(size);
     return rooms;
   } catch (err) {
     throw err;
   }
 };
 
-export { createQueryRoom, getQueryRoom };
+const getQueryRoom = async (roomId: string) => {
+  try {
+    const room = await QueryRoomModel.findOne({ roomId })
+      .populate("questions")
+      .exec();
+    return room;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export { createQueryRoom, getQueryRoom, getQueryRoomList };
