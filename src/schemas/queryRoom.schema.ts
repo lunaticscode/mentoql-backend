@@ -57,7 +57,6 @@ queryRoomSchema.virtual("questions", {
   ref: "Question",
   localField: "roomId",
   foreignField: "queryRoomId",
-  limit: 10,
 });
 
 const QueryRoomModel = model<QueryRoomSchema>("QueryRoom", queryRoomSchema);

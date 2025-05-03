@@ -1,10 +1,10 @@
 import { CLIENT_URL } from "../consts/app";
-import { AppController } from "../types";
+import { AppMiddleware } from "../types";
 
 const STRCIT_ALLOWED_REFERERS = [CLIENT_URL];
 const NOT_BOT_ALLOWER_REFERERS = [CLIENT_URL];
 type RefererValidatorModes = "strict" | "not-bot";
-const refererValidator: (mode: RefererValidatorModes) => AppController =
+const refererValidator: (mode: RefererValidatorModes) => AppMiddleware =
   (mode) => (req, res, next) => {
     const referer = req.headers.referer || "";
 

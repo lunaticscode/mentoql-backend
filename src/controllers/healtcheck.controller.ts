@@ -1,8 +1,9 @@
 import { METNO_SEED_COLLECTION } from "../consts/collection";
+import CustomError, { getErrorArgs } from "../consts/error";
 import milvusClient from "../db_init";
 import mongodb from "../mongodb_init";
 import { AppController } from "../types";
-const healthCheckController: AppController = async (req, res) => {
+const healthCheckController: AppController = async (req, res, next) => {
   try {
     const milvusDBInstance = await milvusClient
       .describeCollection({
@@ -18,8 +19,12 @@ const healthCheckController: AppController = async (req, res) => {
       dbStatus: { milvusDBInstance, mongoDBStatus },
     });
   } catch (err) {
-    console.error({ err });
-    return res.json({ isError: true });
+    return next(
+      new CustomError(
+        getErrorArgs("FAIL_TO_CONNECT_DB"),
+        "healthCheckController"
+      )
+    );
   }
 };
 export default healthCheckController;

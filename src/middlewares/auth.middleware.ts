@@ -1,9 +1,9 @@
 import { IncomingMessage } from "http";
 import { TOKEN_KEY } from "../consts/app";
-import { AppController, UserProfile } from "../types";
+import { AppMiddleware } from "../types";
 import { getDecodedToken, getSignedToken } from "../utils/token";
 
-const authMiddleware: AppController = (req, res, next) => {
+const authMiddleware: AppMiddleware = (req, res, next) => {
   const { cookies } = req;
   const token = cookies[TOKEN_KEY] || null;
   if (!token || !token.trim()) {
