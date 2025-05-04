@@ -7,7 +7,7 @@ import errorMiddleware from "./middlewares/error.middleware";
 import CustomError, { getErrorArgs } from "./consts/error";
 import { AppController } from "./types";
 
-const errorTestController: AppController = (req, res, next) => {
+const errorTestController: AppController = (_req, _res, next) => {
   return next(
     new CustomError(getErrorArgs("UKNOWN_ERROR"), "errorTestController")
   );

@@ -1,3 +1,4 @@
+import { SUCCESS_STATUS_CODE } from "../consts/api";
 import { METNO_SEED_COLLECTION } from "../consts/collection";
 import CustomError, { getErrorArgs } from "../consts/error";
 import {
@@ -55,7 +56,7 @@ const getMentoSeed: AppController = async (req, res, next) => {
       output_fields: ["mento_seed_question", "mento_seed_answer"],
       limit: 100,
     });
-    return res.json({ isError: false });
+    return res.status(SUCCESS_STATUS_CODE.POST).json({ isError: false });
   } catch (err) {
     return next(new CustomError(getErrorArgs("UKNOWN_ERROR"), "getMentoSeed"));
   }
@@ -155,7 +156,7 @@ const insertMetnoSeed: AppController = async (req, res, next) => {
       );
     }
     return res
-      .status(201)
+      .status(SUCCESS_STATUS_CODE.POST)
       .json({ isError: false, insertCnt: insertResult.insert_cnt });
   } catch (err) {
     return next(

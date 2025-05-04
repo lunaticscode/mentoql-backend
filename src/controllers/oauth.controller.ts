@@ -7,24 +7,28 @@ import {
 import { AppController } from "../types";
 import axios from "axios";
 import { getSignedToken } from "../utils/token";
+import CustomError, { getErrorArgs } from "../consts/error";
+import { SUCCESS_STATUS_CODE } from "../consts/api";
 
-const googleOauthSignin: AppController = (_req, res) => {
+const googleOauthSignin: AppController = (_req, res, next) => {
   const baseEntryUrl = "https://accounts.google.com/o/oauth2/v2/auth";
   if (
     [GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI].some(
       (v) => !v
     )
   ) {
-    return res.status(400).json({
-      isError: true,
-      message: "(!) Invalid GOOGLE_OAUTH_VARIABLE value",
-    });
+    return next(
+      new CustomError(
+        getErrorArgs("INVALID_REQUEST_INPUT"),
+        "googleOauthSignin > Invalid oauth request value."
+      )
+    );
   }
   const resultUrl = `${baseEntryUrl}?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=email profile`;
   return res.redirect(resultUrl);
 };
 
-const googleOauthCallback: AppController = async (req, res) => {
+const googleOauthCallback: AppController = async (req, res, next) => {
   const { code } = req.query;
 
   const baseEntryTokenUrl = "https://oauth2.googleapis.com/token";
@@ -37,9 +41,13 @@ const googleOauthCallback: AppController = async (req, res) => {
       grant_type: "authorization_code",
     });
     if (!tokenRequest.data) {
-      return res
-        .status(400)
-        .redirect(`${CLIENT_URL}/signin-error?type=INVALID_CODE`);
+      return next(
+        new CustomError(
+          getErrorArgs("INVALID_REQUEST_INPUT"),
+          "googleOauthCallback > Invalid tokenRequest.data",
+          `${CLIENT_URL}/signin-error?type=INVALID_CODE`
+        )
+      );
     }
 
     const { access_token } = tokenRequest.data;
@@ -51,24 +59,30 @@ const googleOauthCallback: AppController = async (req, res) => {
       },
     });
     if (!profileRequest.data) {
-      return res
-        .status(400)
-        .redirect(`${CLIENT_URL}/signin-error?type=INVALID_TOKEN`);
+      return next(
+        new CustomError(
+          getErrorArgs("INVALID_REQUEST_INPUT"),
+          "googleOauthCallback > Invalid profileRequest.data",
+          `${CLIENT_URL}/signin-error?type=INVALID_TOKEN`
+        )
+      );
     }
 
     const { email, picture, name } = profileRequest.data;
 
     const signedToken = getSignedToken({ email, picture, name });
     res.cookie(TOKEN_KEY, signedToken, { path: "/", httpOnly: true });
-    return res.redirect(`${CLIENT_URL}/signin-success`);
-  } catch (err) {
     return res
-      .status(500)
-      .redirect(
-        `${CLIENT_URL}/signin-error?type=SERVER_ERROR&message=${
-          err instanceof Error ? err.message.toString() : "Unknown"
-        }`
-      );
+      .status(SUCCESS_STATUS_CODE.GET)
+      .redirect(`${CLIENT_URL}/signin-success`);
+  } catch (err) {
+    return next(
+      new CustomError(
+        getErrorArgs("UKNOWN_ERROR"),
+        "googleOauthCallback",
+        `${CLIENT_URL}/signin-error?type=SERVER_ERROR`
+      )
+    );
   }
 };
 

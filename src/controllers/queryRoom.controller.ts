@@ -6,34 +6,55 @@ import {
   getQueryRoomList,
 } from "../services/queryRoom.service";
 import { queryRoomInputSchema } from "../schemas/queryRoom.schema";
+import CustomError, { getErrorArgs } from "../consts/error";
+import { SUCCESS_STATUS_CODE } from "../consts/api";
 
-const getQueryRoomListController: AppController = async (req, res) => {
+const getQueryRoomListController: AppController = async (req, res, next) => {
   const { page = 1, size = 10 } = req.query;
   if (!page || !size) {
-    return res.status(400).json({ isError: true });
+    return next(
+      new CustomError(
+        getErrorArgs("INVALID_REQUEST_INPUT"),
+        "getQueryRoomListController > Invalid page, size parameter."
+      )
+    );
   }
   const [parsedPage, parserdSize] = [Number(page), Number(size)];
   try {
     const rooms = await getQueryRoomList(parsedPage, parserdSize);
-    return res.json({ isError: false, rooms });
+    return res.status(SUCCESS_STATUS_CODE.GET).json({ rooms });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ isError: true });
+    return next(
+      new CustomError(
+        getErrorArgs("UKNOWN_ERROR"),
+        "getQueryRoomListController"
+      )
+    );
   }
 };
 
-const getQueryRoomController: AppController = async (req, res) => {
+const getQueryRoomController: AppController = async (req, res, next) => {
   const { roomId } = req.params;
+  if (!roomId) {
+    return next(
+      new CustomError(
+        getErrorArgs("INVALID_REQUEST_INPUT"),
+        "getQueryRoomController > Invalid roomId parameter"
+      )
+    );
+  }
   try {
     const queryRoom = await getQueryRoom(roomId);
-    return res.json({ isError: false, queryRoom });
+    return res.status(SUCCESS_STATUS_CODE.GET).json({ queryRoom });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ isError: true });
+    return next(
+      new CustomError(getErrorArgs("UKNOWN_ERROR"), "getQueryRoomController")
+    );
   }
 };
 
-const createQueryRoomController: AppController = async (req, res) => {
+const createQueryRoomController: AppController = async (req, res, next) => {
   const tmpQueryRoomInput = req.body;
   const queryRoomInput = {
     ...tmpQueryRoomInput,
@@ -42,8 +63,12 @@ const createQueryRoomController: AppController = async (req, res) => {
   };
   const parsedInput = queryRoomInputSchema.safeParse(queryRoomInput);
   if (!parsedInput.success) {
-    console.error(parsedInput.error.format());
-    return res.status(400).json({ isError: true });
+    return next(
+      new CustomError(
+        getErrorArgs("INVALID_REQUEST_INPUT"),
+        "createQueryRoomController > Invalid queryRoomInput."
+      )
+    );
   }
   try {
     const createdRoomId = await createQueryRoom({
@@ -51,14 +76,11 @@ const createQueryRoomController: AppController = async (req, res) => {
       roomId: getRandomId(),
       owner: `test-mento-owner-${new Date().getTime()}`,
     });
-    if (createdRoomId) {
-      return res.status(201).json({ isError: false, roomId: createdRoomId });
-    }
-    console.log("createdRoomId is undefined", { createdRoomId });
-    return res.status(200).json({ isError: false });
+    return res.status(SUCCESS_STATUS_CODE.POST).json({ roomId: createdRoomId });
   } catch (err) {
-    console.error({ err });
-    return res.status(500).json({ isError: true });
+    return next(
+      new CustomError(getErrorArgs("UKNOWN_ERROR"), "createQueryRoomController")
+    );
   }
 };
 

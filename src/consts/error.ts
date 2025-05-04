@@ -2,6 +2,7 @@ class CustomError extends Error {
   message: string;
   statusCode: number;
   from?: string;
+  redirectUrl?: string;
 
   constructor(
     {
@@ -11,12 +12,14 @@ class CustomError extends Error {
       message: string;
       statusCode: number;
     },
-    from?: string
+    from?: string,
+    redirectUrl?: string
   ) {
     super();
     this.message = message;
     this.statusCode = statusCode;
     this.from = from;
+    this.redirectUrl = redirectUrl;
   }
 }
 

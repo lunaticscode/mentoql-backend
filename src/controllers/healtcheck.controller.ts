@@ -1,3 +1,4 @@
+import { SUCCESS_STATUS_CODE } from "../consts/api";
 import { METNO_SEED_COLLECTION } from "../consts/collection";
 import CustomError, { getErrorArgs } from "../consts/error";
 import milvusClient from "../db_init";
@@ -15,7 +16,7 @@ const healthCheckController: AppController = async (req, res, next) => {
     const mongoDBStatus =
       mongodb.connection.readyState === 1 ? "connected" : "(!) disconnected";
 
-    return res.json({
+    return res.status(SUCCESS_STATUS_CODE.GET).json({
       dbStatus: { milvusDBInstance, mongoDBStatus },
     });
   } catch (err) {
